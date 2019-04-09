@@ -27,7 +27,7 @@ def getRatingMatrix(filename):
         # Create a list to hold all the data
         data = []
 
-        print "Number of Lines: ", len(lines)
+        print ("Number of Lines: ", len(lines))
 
         # For each Data Entry, get the Y and the Xs in their respective list
         for line in lines:
@@ -48,8 +48,8 @@ def getRatingMatrix(filename):
         num_movies = data[a[1]][1]
 
         # print "Max values Indices: ", a
-        print "Number of Users: ", num_users
-        print "Number of Movies: ", num_movies
+        print ("Number of Users: ", num_users)
+        print ("Number of Movies: ", num_movies)
 
         # Creat and initialise Rating Matrix to hold all the rating values
         ratingMatrix = np.zeros((num_users, num_movies))
@@ -69,10 +69,10 @@ def cf_movie_vector(rating_matrix, user_vectors, movie_vectors, K):
     movie_profiles = np.zeros((len(rating_matrix[0]), K))
     
     count = 0
-    for j in xrange(len(rating_matrix[0])):
+    for j in range(len(rating_matrix[0])):
         first_term = np.zeros((K, K))
         
-        for i in xrange(len(rating_matrix)):
+        for i in range(len(rating_matrix)):
             if rating_matrix[i][j] > 0:     
                 first_term = np.add(first_term, np.outer(user_vectors[i], user_vectors[i]))
 
@@ -82,7 +82,7 @@ def cf_movie_vector(rating_matrix, user_vectors, movie_vectors, K):
 
         second_term = np.zeros(K)
 
-        for i in xrange(len(user_vectors)):
+        for i in range(len(user_vectors)):
             if rating_matrix[i][j] > 0:
                 second_term = np.add(second_term, np.multiply(rating_matrix[i][j], user_vectors[i]))
 
@@ -96,8 +96,8 @@ def cf_movie_vector(rating_matrix, user_vectors, movie_vectors, K):
 def getRMSE(Actual_Rating, Predicted_Rating):
     # Calculate the Root Mean Squared Error(RMS)
     rmse = 0.0
-    for i in xrange(len(Actual_Rating)):
-        for j in xrange(len(Actual_Rating[0])):
+    for i in range(len(Actual_Rating)):
+        for j in range(len(Actual_Rating[0])):
             if Actual_Rating[i][j] > 0:
                 rmse = rmse + pow((Actual_Rating[i][j] - Predicted_Rating[i][j]), 2)
 
@@ -105,7 +105,7 @@ def getRMSE(Actual_Rating, Predicted_Rating):
     rmse = math.sqrt(rmse)
 
     # Print and return the RMSE
-    print 'Root Mean Squared Error(RMS) = ' , rms
+    print ('Root Mean Squared Error(RMS) = ' , rms)
     return rms
 
 
@@ -132,9 +132,9 @@ def alternateOptimization(rating_matrix, NUM_OF_FACTORS):
     # Save and print the Number of Users and Movies
     NUM_USERS = rating_matrix.shape[0]
     NUM_MOVIES = rating_matrix.shape[1]
-    print "Number of Users", NUM_USERS
-    print "Number of Movies", NUM_MOVIES
-    print "Number of Latent Factors: ", NUM_OF_FACTORS
+    print ("Number of Users", NUM_USERS)
+    print ("Number of Movies", NUM_MOVIES)
+    print ("Number of Latent Factors: ", NUM_OF_FACTORS)
 
     # Create the user and item profile vector of appropriate size.
     # Initialize the item vectors randomly, check the random generation
@@ -143,7 +143,7 @@ def alternateOptimization(rating_matrix, NUM_OF_FACTORS):
 
     i = 0    
     
-    print "Entering Main Loop of alternateOptimization"
+    print ("Entering Main Loop of alternateOptimization")
 
     decTree = dtree.Tree(dtree.Node(None, 1), rating_matrix, NUM_OF_FACTORS)
 
@@ -186,8 +186,8 @@ def printTopKMovies(test, predicted, K = 2):
     zero_list = []
     movie_list = []
 
-    for i in xrange(len(test)):
-        for j in xrange(len(test[0])):
+    for i in range(len(test)):
+        for j in range(len(test[0])):
             if test[i][j] == 0:
                 zero_list.append(predicted[i][j])
                 movie_list.append(j)
@@ -198,24 +198,24 @@ def printTopKMovies(test, predicted, K = 2):
             args = np.argsort(zero_array)
             movie_array = movie_array[args]
 
-            print "Top Movies Not rated by the user"
+            print ("Top Movies Not rated by the user")
             print movie_array[0:K-1]
 
 if __name__ == "__main__":
     # Get the Data
     (User_Movie_Dict, data) = getRatingMatrix("ratings_small.dat")
 
-    print "Dimensions of the Dataset: ", data.shape
+    print ("Dimensions of the Dataset: ", data.shape)
     
     # Split the data 75-25 into training and testing dataset
     (train, test) = random_split(data)
-    print "Dimensions of the Training Set: ", train.shape
-    print "Dimensions of the Testing Set: ", test.shape
+    print ("Dimensions of the Training Set: ", train.shape)
+    print ("Dimensions of the Testing Set: ", test.shape)
 
     # Split the testing dataset 75-25 into answer and evaluation dataset
     (answer, evaluation) = random_split(test)
-    print "Dimensions of the Answer Set: ", answer.shape
-    print "Dimensions of the Evaluation Set: ", evaluation.shape
+    print ("Dimensions of the Answer Set: ", answer.shape)
+    print ("Dimensions of the Evaluation Set: ", evaluation.shape)
     
     # Set the number of Factors
     NUM_OF_FACTORS = 20
@@ -224,9 +224,9 @@ if __name__ == "__main__":
     user_vectors = decisionTree.getUserVectors(test, NUM_OF_FACTORS)
 
     Predicted_Rating = np.dot(user_vectors, movie_vector)
-    print "Predicted_Rating for Test: ", Predicted_Rating
-    print "Test Rating: ", test
-    print "RMSE on Testing: ", getRMSE(test, Predicted_Rating)
+    print ("Predicted_Rating for Test: ", Predicted_Rating)
+    print ("Test Rating: ", test)
+    print ("RMSE on Testing: ", getRMSE(test, Predicted_Rating))
 
     # Top K new recommendations:
     # printTopKMovies(test, Predicted_Rating, 1)

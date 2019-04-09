@@ -35,7 +35,7 @@ def closed_form(rating_matrix, movie_vectors, indices, K):
 	for i in indices:
 		first_term = np.zeros((K, K))
 		
-		for j in xrange(len(movie_vectors)):
+		for j in range(len(movie_vectors)):
 			first_term = np.add(first_term, np.outer(movie_vectors[j], movie_vectors[j]))
 
 		# Take the inverse of the first term
@@ -43,7 +43,7 @@ def closed_form(rating_matrix, movie_vectors, indices, K):
 
 		second_term = np.zeros(K)
 
-		for j in xrange(len(movie_vectors)):
+		for j in range(len(movie_vectors)):
 			second_term = np.add(second_term, np.multiply(rating_matrix[i][j], movie_vectors[j]))
 
 		user_profiles[count] = np.dot(first_term, second_term)
@@ -76,7 +76,7 @@ class Tree:
 		# rand_prob[rand_prob > prob_failure] = 1
 		current_node = self.root
 
-		print "Before"
+		(print "Before")
 		# Traverse the tree till you reach the leaf
 		while current_node.like != None or current_node.dislike != None or current_node.unknown != None : 
 			if user_answers[current_node.movie_index] == 0:
@@ -87,19 +87,19 @@ class Tree:
 				current_node = current_node.unknown
 		
 		# return the user vecotr associated with the lead node
-		print "zzz", current_node.user_vector.shape
+#                print ("zzz", current_node.user_vector.shape)
 		return np.mean(current_node.user_vector, axis = 0)
 
 	# Returns the user vector for the decision tree
 	def getUserVectors(self, rating_matrix, K):
 		ultimate_user_vector = np.zeros((len(rating_matrix), K))
 		
-		for i in xrange(len(rating_matrix)):
+		for i in range(len(rating_matrix)):
 			# Stores the user response
 			user_response = np.zeros(len(rating_matrix[0]))
 			
 			# Get the responses using the rating matrix
-			for j in xrange(len(rating_matrix[0])):
+			for j in range(len(rating_matrix[0])):
 				if rating_matrix[i][j] > 3:
 					user_response[j] = 0
 				elif rating_matrix[i][j] == 0:
@@ -109,7 +109,7 @@ class Tree:
 
 			# Traverse the tree abd store the user vector associated with leaf node reached
 			temp = self.traverse(user_response)
-			print "zz", temp.shape
+                    #print ("zz", temp.shape)
 			ultimate_user_vector[i] = temp
 
 		# return the user vector
@@ -128,8 +128,8 @@ class Tree:
 
 		# Calulate the Error Before the Split
 		error_before = 0
-		for i in xrange(len(rating_matrix)):
-			for j in xrange(len(rating_matrix[i])):
+		for i in range(len(rating_matrix)):
+			for j in range(len(rating_matrix[i])):
 				if rating_matrix[i][j] > 0:
 					error_before = error_before + pow(rating_matrix[i][j] - np.dot(current_node.user_vector[i,:].T, movie_vectors[j, :]), 2)
 	                # TODO: Check if regularized
@@ -141,7 +141,7 @@ class Tree:
 
 		# print "Error Before: ", error_before
 
-		for movie_index in xrange(len(rating_matrix[0])):
+		for movie_index in range(len(rating_matrix[0])):
 			# Split the rating_matrix into like, dislike and unknown
 			(indices_like, indices_dislike, indices_unknown) = splitUsers(rating_matrix, movie_index)
 
@@ -173,21 +173,21 @@ class Tree:
 			value = 0
 
 			# Add the like part
-			for i in xrange(len(like)):
-				for j in xrange(len(like[i])):
+			for i in range(len(like)):
+				for j in range(len(like[i])):
 					if like[i][j] > 0:
 						# print "1: ", like_vector[i, :].shape, "2: ", movie_vectors[j,:].shape
 						value = value + pow(like[i][j] - np.dot(like_vector[i, :], movie_vectors[j, :]), 2)
 
 	        # Add the dislike part
-			for i in xrange(len(dislike)):
-				for j in xrange(len(dislike[i])):
+			for i in range(len(dislike)):
+				for j in range(len(dislike[i])):
 					if dislike[i][j] > 0:
 						value = value + pow(dislike[i][j] - np.dot(dislike_vector[i, :], movie_vectors[j, :]), 2)
 
 	        # Add the unknown part
-			for i in xrange(len(unknown)):
-				for j in xrange(len(unknown[i])):
+			for i in range(len(unknown)):
+				for j in range(len(unknown[i])):
 					if unknown[i][j] > 0:
 						value = value + pow(unknown[i][j] - np.dot(unknown_vector[i, :], movie_vectors[j, :]), 2)
 			
