@@ -1,6 +1,6 @@
 # Import the Required Libraries
 import numpy as np
-from StringIO import StringIO
+from io import StringIO
 import math 
 import random
 

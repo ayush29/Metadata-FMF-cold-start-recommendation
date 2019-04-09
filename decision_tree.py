@@ -1,6 +1,6 @@
 # Import the Required Libraries
 import numpy as np
-from StringIO import StringIO
+from io import StringIO
 import math 
 
 # import form user defined libraries
@@ -76,7 +76,7 @@ class Tree:
 		# rand_prob[rand_prob > prob_failure] = 1
 		current_node = self.root
 
-		(print "Before")
+		############print ("Before")
 		# Traverse the tree till you reach the leaf
 		while current_node.like != None or current_node.dislike != None or current_node.unknown != None : 
 			if user_answers[current_node.movie_index] == 0:

@@ -1,6 +1,5 @@
 # Import the Required Libraries
 import numpy as np
-from StringIO import StringIO
 import math 
 import random
 
@@ -52,11 +51,11 @@ def getRatingMatrix(filename):
         print ("Number of Movies: ", num_movies)
 
         # Creat and initialise Rating Matrix to hold all the rating values
-        ratingMatrix = np.zeros((num_users, num_movies))
+        ratingMatrix = np.zeros((int(num_users), int(num_movies)))
 
         for list1 in data:
             # print list1[0], " ", list1[1]
-            ratingMatrix[list1[0] - 1][list1[1] - 1] = list1[2]
+            ratingMatrix[int(list1[0]) - 1][int(list1[1]) - 1] = list1[2]
             
         # Return both the array and the dict
         return (User_Movie_Dict, ratingMatrix)
@@ -199,11 +198,11 @@ def printTopKMovies(test, predicted, K = 2):
             movie_array = movie_array[args]
 
             print ("Top Movies Not rated by the user")
-            print movie_array[0:K-1]
+            print (movie_array[0:K-1])
 
 if __name__ == "__main__":
     # Get the Data
-    (User_Movie_Dict, data) = getRatingMatrix("ratings_small.dat")
+    (User_Movie_Dict, data) = getRatingMatrix("ratings.dat")
 
     print ("Dimensions of the Dataset: ", data.shape)
     
