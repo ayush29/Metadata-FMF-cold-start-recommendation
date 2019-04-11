@@ -25,11 +25,12 @@ def getUserFeatureMatrix(ratingcsv,moviefeaturecsv,maxUsers):
     featuresdf = df[df.index.isin(commonMovieIds)]
     
     
-    #dropping users
-    users = df2['userId'].unique()
-    users.sort()
+    #dropping users and keeping #maxUsers with most ratings
+    users = df2.groupby(['userId'],sort = False).size().sort_values(ascending =False).index.values.tolist()
+#     users.sort()
+    
     users = users[:maxUsers]
-    print(max(users))
+#     print(max(users))
     ratingdf = ratingdf[ratingdf['userId'].isin(users)]
     
     num_users = len(users)
@@ -38,7 +39,7 @@ def getUserFeatureMatrix(ratingcsv,moviefeaturecsv,maxUsers):
     print(num_movies)
     utility_mat = np.zeros((num_users,num_movies))
     for _,row in ratingdf.iterrows():            
-        utility_mat[int(row['userId']-1)][commonMovieIds.index(int(row['movieId']))] = row['rating']
+        utility_mat[users.index(int(row['userId']))][commonMovieIds.index(int(row['movieId']))] = row['rating']
     
     movieFeaturesMat = featuresdf.as_matrix()
     
@@ -264,8 +265,8 @@ def printTopKMovies(test, predicted, K = 2):
             print ("Top Movies Not rated by the user")
             print (movie_array[0:K-1])
 
-if __name__ == "__main__":
-    MAX_NUM_USERS = 2000
+def run(max_users=500,Lambda=0.02, iterations=3,max_depth=5,num_factors=10):
+    MAX_NUM_USERS = max_users
     
     # Get the Data
     ratingDF,featureDF =getUserFeatureMatrix("./the-movies-dataset/ratings.csv","./movies_cross_features.csv",MAX_NUM_USERS)
@@ -297,10 +298,10 @@ if __name__ == "__main__":
     print ("Dimensions of the Evaluation Set: ", evaluation_rating.shape)
     
     # Set the number of Factors
-    NUM_OF_FACTORS = 15
-    MAX_DEPTH = 5
-    ITERATIONS = 4
-    LAMBDA = 0.02
+    NUM_OF_FACTORS = num_factors
+    MAX_DEPTH = max_depth
+    ITERATIONS = iterations
+    LAMBDA = Lambda
     (decisionTree, movie_vector) = alternateOptimization(train_rating,train_feature, NUM_OF_FACTORS,MAX_DEPTH,ITERATIONS, LAMBDA)
     
     user_vectors = decisionTree.getUserVectors(test_feature, NUM_OF_FACTORS)
@@ -308,11 +309,14 @@ if __name__ == "__main__":
     Predicted_Rating = np.dot(user_vectors, movie_vector)
     print ("Predicted_Rating for Test: ", Predicted_Rating) 
     print ("Test Rating: ", test_rating)
-    print ("RMSE on Testing: ", getRMSE(test_rating, Predicted_Rating))
+    rmse = getRMSE(test_rating, Predicted_Rating)
+    print ("RMSE on Testing: ", rmse)
+    return rmse
     
-    pd.DataFrame(test_rating, index = ratingDF.index.values[test_indices],columns = ratingDF.columns).to_csv("true_rating_TMDB.csv")
     
-    pd.DataFrame(Predicted_Rating, index = ratingDF.index.values[test_indices],columns = ratingDF.columns).to_csv("prediction_rating_TMDB.csv")
+#     pd.DataFrame(test_rating, index = ratingDF.index.values[test_indices],columns = ratingDF.columns).to_csv("true_rating_TMDB.csv")
+    
+#     pd.DataFrame(Predicted_Rating, index = ratingDF.index.values[test_indices],columns = ratingDF.columns).to_csv("prediction_rating_TMDB.csv")
 
     # Top K new recommendations:
     # printTopKMovies(test, Predicted_Rating, 1)
