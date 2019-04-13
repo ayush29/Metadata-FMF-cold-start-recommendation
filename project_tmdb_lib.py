@@ -265,7 +265,7 @@ def printTopKMovies(test, predicted, K = 2):
             print ("Top Movies Not rated by the user")
             print (movie_array[0:K-1])
 
-def run(max_users=500,Lambda=0.02, iterations=3,max_depth=5,num_factors=10):
+def run(max_users=1500,Lambda=0.08, iterations=5,max_depth=5,num_factors=10):
     MAX_NUM_USERS = max_users
     
     # Get the Data
