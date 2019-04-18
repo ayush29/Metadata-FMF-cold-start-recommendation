@@ -269,7 +269,7 @@ def run(max_users=1500,Lambda=0.08, iterations=5,max_depth=5,num_factors=10):
     MAX_NUM_USERS = max_users
     
     # Get the Data
-    ratingDF,featureDF =getUserFeatureMatrix("./the-movies-dataset/ratings.csv","./movies_cross_features.csv",MAX_NUM_USERS)
+    ratingDF,featureDF =getUserFeatureMatrix("./the-movies-dataset/ratings.csv","./tmdb_movies_cross_features.csv",MAX_NUM_USERS)
     rating_matrix = ratingDF.as_matrix()
     feature_matrix = featureDF.as_matrix()
     
